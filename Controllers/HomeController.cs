@@ -3,14 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fiap01.Models;
+using Fiap01.Data;
 
 namespace Fiap01.controllers
 {
     public class HomeController : Controller
     {
+
+        private PerguntasContext _context;
+
+        public HomeController(PerguntasContext context)
+        {
+            _context = context;
+        }
+
+
         public IActionResult Index()
         {
-            return View();
+            //ViewBag.Nome = "Carlos Eduardo de Souza";
+            //ViewData["nomeDoAluno"] = $"outro nome {DateTime.Now}"; 
+        
+
+            //var pergunta = new Pergunta()
+            //{
+            //    Id = 1,
+            //    Descricao = "Que dia é hoje"
+            //};
+
+            return View(_context.Perguntas.ToList());
         }
 
         public IActionResult Sobre()
@@ -23,9 +44,29 @@ namespace Fiap01.controllers
             return View();
         }
 
-        //public string Index()
-        //{
-        //    return DateTime.Now.ToString();
-        //}
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Pergunta pergunta)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _context.Perguntas.Add(pergunta);
+                await _context.SaveChangesAsync();
+
+                var a = pergunta;
+
+            }
+            return View();
+        }
+
+      
     }
 }
